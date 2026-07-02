@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --border: #d8d6ce;
+  --silver: #888880;
+  --gold: #8b6914;
 }
 
 @theme inline {
@@ -12,15 +17,118 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.loading-page {
+  min-height: 100vh;
+}
+
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--white);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.loader-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.02);
+}
+
+.loader-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.loader-thirty {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-weight: 800;
+  font-size: clamp(64px, 10vw, 120px);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--black);
+}
+
+.loader-three {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(16px, 2.4vw, 28px);
+  letter-spacing: 0.55em;
+  color: var(--silver);
+  padding-left: 0.55em;
+}
+
+.loader-bar {
+  width: 180px;
+  height: 1px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.loader-fill {
+  height: 100%;
+  background: var(--black);
+  transition: width 0.05s linear;
+}
+
+.loader-pct {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--silver);
+}
+
+.page-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 24px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.page-content h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.05;
+  margin: 0 0 16px;
+}
+
+.subtitle {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--silver);
+  max-width: 640px;
 }
