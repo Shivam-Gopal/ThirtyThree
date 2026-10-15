@@ -15,6 +15,8 @@ const renderLogo = (l: Logo) => (
       width={l.width}
       height={l.height}
       sizes="180px"
+      // Eager: lazy-loading made logos pop in one-by-one as they slid on screen (blank gaps + repaints on mobile).
+      loading="eager"
       className="h-full w-auto max-w-[180px] object-contain opacity-[0.55] grayscale transition-[filter,opacity] duration-300 hover:opacity-100 hover:grayscale-0"
     />
   </span>
@@ -26,13 +28,13 @@ const renderHandle = (h: string) => (
   </span>
 );
 
-/** "Logos - on board": two data-driven marquees (logos → left, handles → right). */
+/** "Logos on-board": two data-driven marquees (logos → left, handles → right). */
 export function Clients({ logos, handles }: { logos: Logo[]; handles: string[] }) {
   return (
     <Section>
       <Wrap>
         <Reveal><Eyebrow>The roster</Eyebrow></Reveal>
-        <Reveal as="h2" delay={0.06} className={titleClass}>Logos - on board.</Reveal>
+        <Reveal as="h2" delay={0.06} className={titleClass}>Logos on-board.</Reveal>
         <Reveal as="p" delay={0.12} className="mt-3 text-[15px] text-ink-50">A few of the brands ThirtyThree has partnered with.</Reveal>
       </Wrap>
       <div className="mt-12">

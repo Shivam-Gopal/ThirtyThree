@@ -25,8 +25,9 @@ type Props<T> = {
  *     the viewport, so short arrays never leave a gap.
  *  2. Two identical sets sit side by side and a GPU-only translate3d(-50%) loop slides them → no jump on reset.
  *  3. Duration = items × secondsPerItem, so adding logos never speeds the strip up.
- *  4. The animation is paused while off-screen (saves CPU) and on hover; items are memoised so React never
+ *  4. The animation is paused while off-screen (saves CPU) and on mouse hover; items are memoised so React never
  *     re-renders them while the CSS animation runs.
+ *  5. With prefers-reduced-motion the strip does not auto-scroll; it becomes a native swipeable row instead.
  */
 function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", secondsPerItem = 2.4, gap = "4.5rem", fade = true, className }: Props<T>) {
   const viewport = useRef<HTMLDivElement>(null);
@@ -48,11 +49,19 @@ function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", second
     return () => ro.disconnect();
   }, [repeat, items.length]);
 
+  // Phones/tablets turn this on via accessibility settings AND many battery-saver modes. We must not leave a
+  // frozen strip that only ever shows the first logo, so in that case the row becomes a static, swipeable list.
   const [prefersReduced, setPrefersReduced] = useState(false);
-  useEffect(() => setPrefersReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setPrefersReduced(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const duration = `${Math.max(8, items.length * repeat * secondsPerItem)}s`;
-  const copies = Array.from({ length: repeat });
+  const copies = Array.from({ length: prefersReduced ? 1 : repeat });
   const setClass = "flex shrink-0 items-center";
   const setStyle = { gap, paddingRight: gap };
 
@@ -62,6 +71,21 @@ function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", second
     </div>
   );
 
+  if (prefersReduced) {
+    return (
+      <div
+        ref={viewport}
+        className={cn(
+          "touch-pan-x overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          fade && "[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]",
+          className,
+        )}
+      >
+        <div className="flex w-max items-center px-[8%]">{renderSet(false)}</div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={viewport}
@@ -69,10 +93,12 @@ function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", second
     >
       <div
         className={cn(
-          "flex w-max items-center will-change-transform hover:[animation-play-state:paused]",
+          // Hover-pause only on real mouse pointers: on touch screens :hover "sticks" after a tap and would freeze the strip.
+          "flex w-max items-center will-change-transform [@media(hover:hover)_and_(pointer:fine)]:hover:[animation-play-state:paused]",
           direction === "left" ? "animate-marquee-left" : "animate-marquee-right",
         )}
-        style={{ animationDuration: duration, animationPlayState: onScreen && !prefersReduced ? "running" : "paused" }}
+        // Only set the inline play-state when pausing; an inline "running" would override the hover rule above.
+        style={{ animationDuration: duration, animationPlayState: onScreen ? undefined : "paused" }}
       >
         {renderSet(false)}
         {renderSet(true)}
