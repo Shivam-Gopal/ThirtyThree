@@ -145,7 +145,7 @@ export const whyUs = [
 const logo = (slug: string, name: string, width: number, height: number): Logo => ({
   slug,
   name,
-  src: `/media/logos/clients/${slug}.png`,
+  src: `/media/logos/clients/${slug}-v2.png`,
   width,
   height,
 });
@@ -318,7 +318,7 @@ export const sampleWork: SampleWork[] = [
         { type: "text", text: "Before Thirtythree, MVRI's Instagram was generating:" },
         {
           type: "figure",
-          src: "/media/case-studies/mvri-by-the-sea/figure-1.webp",
+          src: "/media/case-studies/mvri-by-the-sea/figure-1-v2.webp",
           alt: "Baseline stats before ThirtyThree: 20.4K views, 13.2K accounts reached, 354 content interactions",
           width: 1408,
           height: 768,
@@ -348,7 +348,7 @@ export const sampleWork: SampleWork[] = [
         { type: "pull", text: "Relevant reach is better." },
         {
           type: "figure",
-          src: "/media/case-studies/mvri-by-the-sea/figure-2.webp",
+          src: "/media/case-studies/mvri-by-the-sea/figure-2-v2.webp",
           alt: "Audience gender mix moving from a near-even 51% female baseline to 94.7% female reach",
           width: 1361,
           height: 768,
@@ -418,7 +418,7 @@ export const sampleWork: SampleWork[] = [
         },
         {
           type: "figure",
-          src: "/media/case-studies/mvri-by-the-sea/figure-3.webp",
+          src: "/media/case-studies/mvri-by-the-sea/figure-3-v2.webp",
           alt: "Four-month campaign impact: 6M+ Instagram views, 1.38M+ peak accounts reached, 45K+ content interactions, 10K+ website link clicks, 2000+ qualified leads",
           width: 1376,
           height: 768,
@@ -436,7 +436,7 @@ export const sampleWork: SampleWork[] = [
         },
         {
           type: "figure",
-          src: "/media/case-studies/mvri-by-the-sea/figure-4.webp",
+          src: "/media/case-studies/mvri-by-the-sea/figure-4-v2.webp",
           alt: "Lifetime follower progression from 9.2K to 12.6K+, with 90%+ female and niche-specific followers",
           width: 1396,
           height: 768,
