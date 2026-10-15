@@ -438,8 +438,8 @@ export const sampleWork: SampleWork[] = [
           type: "figure",
           src: "/media/case-studies/mvri-by-the-sea/figure-4.webp",
           alt: "Lifetime follower progression from 9.2K to 12.6K+, with 90%+ female and niche-specific followers",
-          width: 1024,
-          height: 563,
+          width: 1396,
+          height: 768,
         },
 
         { type: "heading", text: "A million views is nice. What happens next matters more." },
