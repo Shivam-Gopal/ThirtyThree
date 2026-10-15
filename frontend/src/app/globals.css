@@ -1,0 +1,28 @@
+/* Only tokens / base resets live here. Every component styles itself with Tailwind utilities. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    margin: 0;
+    overflow-x: clip;
+  }
+  img { max-width: 100%; }
+  h1, h2, h3 {
+    @apply font-display font-black uppercase;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  a:focus-visible, button:focus-visible { outline: 2px solid #cbb585; outline-offset: 3px; }
+  body.tt-loading { overflow: hidden; }
+  @media (hover: hover) and (pointer: fine) {
+    html.tt-custom-cursor, html.tt-custom-cursor a, html.tt-custom-cursor button { cursor: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.001s !important; transition-duration: 0.001s !important; }
+  }
+}
