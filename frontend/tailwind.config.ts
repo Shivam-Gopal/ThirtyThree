@@ -14,7 +14,7 @@ const config: Config = {
           DEFAULT: "#121009",
           2: "#1b1811",
           70: "rgba(18,16,9,0.78)",
-          50: "rgba(18,16,9,0.58)",
+          50: "rgba(18,16,9,0.62)", // 0.58 was 4.39:1 on beige, just under the WCAG AA 4.5:1 minimum
         },
         line: "rgba(18,16,9,0.14)",
         beige: { DEFAULT: "#e7dab8", dk: "#cbb585", soft: "#f1e9d6" },

@@ -70,7 +70,7 @@ export function Navbar({ links }: { links: NavLink[] }) {
         <Link
           href="/"
           className={cn(
-            "flex select-none items-end gap-[6px] no-underline [transform-style:preserve-3d] transition-[transform,color] duration-300 ease-snap hover:[transform:perspective(300px)_rotateX(10deg)_rotateY(-6deg)]",
+            "-my-2 flex select-none items-end gap-[6px] py-2 no-underline [transform-style:preserve-3d] transition-[transform,color] duration-300 ease-snap hover:[transform:perspective(300px)_rotateX(10deg)_rotateY(-6deg)]",
             light ? "text-ink" : "text-on-ink",
           )}
         >

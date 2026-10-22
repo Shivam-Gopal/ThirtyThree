@@ -1,5 +1,5 @@
 "use client";
-import { memo, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { memo, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useInView } from "@/app/hooks/useInView";
 import { cn } from "@/app/lib/cn";
 
@@ -27,12 +27,15 @@ type Props<T> = {
  *  3. Duration = items × secondsPerItem, so adding logos never speeds the strip up.
  *  4. The animation is paused while off-screen (saves CPU) and on mouse hover; items are memoised so React never
  *     re-renders them while the CSS animation runs.
- *  5. With prefers-reduced-motion the strip does not auto-scroll; it becomes a native swipeable row instead.
+ *  5. It keeps scrolling with prefers-reduced-motion (Android battery savers set it and a frozen strip looked broken);
+ *     the track is marked data-marquee so the global reduced-motion rule in globals.css skips it.
  */
 function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", secondsPerItem = 2.4, gap = "4.5rem", fade = true, className }: Props<T>) {
   const viewport = useRef<HTMLDivElement>(null);
   const firstSet = useRef<HTMLDivElement>(null);
-  const onScreen = useInView(viewport, { rootMargin: "100px 0px" });
+  // initial: true -> the server HTML is already "running", so the strip moves even before (or without) JavaScript.
+  // It only pauses once the observer has actually confirmed the strip is off-screen.
+  const onScreen = useInView(viewport, { rootMargin: "100px 0px", initial: true });
   const [repeat, setRepeat] = useState(1);
 
   useLayoutEffect(() => {
@@ -49,19 +52,8 @@ function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", second
     return () => ro.disconnect();
   }, [repeat, items.length]);
 
-  // Phones/tablets turn this on via accessibility settings AND many battery-saver modes. We must not leave a
-  // frozen strip that only ever shows the first logo, so in that case the row becomes a static, swipeable list.
-  const [prefersReduced, setPrefersReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setPrefersReduced(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
   const duration = `${Math.max(8, items.length * repeat * secondsPerItem)}s`;
-  const copies = Array.from({ length: prefersReduced ? 1 : repeat });
+  const copies = Array.from({ length: repeat });
   const setClass = "flex shrink-0 items-center";
   const setStyle = { gap, paddingRight: gap };
 
@@ -71,27 +63,13 @@ function MarqueeInner<T>({ items, getKey, renderItem, direction = "left", second
     </div>
   );
 
-  if (prefersReduced) {
-    return (
-      <div
-        ref={viewport}
-        className={cn(
-          "touch-pan-x overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-          fade && "[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]",
-          className,
-        )}
-      >
-        <div className="flex w-max items-center px-[8%]">{renderSet(false)}</div>
-      </div>
-    );
-  }
-
   return (
     <div
       ref={viewport}
       className={cn("overflow-hidden", fade && "[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]", className)}
     >
       <div
+        data-marquee
         className={cn(
           // Hover-pause only on real mouse pointers: on touch screens :hover "sticks" after a tap and would freeze the strip.
           "flex w-max items-center will-change-transform [@media(hover:hover)_and_(pointer:fine)]:hover:[animation-play-state:paused]",

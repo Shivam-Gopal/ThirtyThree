@@ -37,7 +37,7 @@ export function Testimonials({ items, section }: Props) {
   }, []);
   const start = useCallback(() => {
     stop();
-    if (n < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (n < 2) return; // still rotates with reduced motion (instant swap, see globals.css)
     timer.current = setInterval(() => {
       if (onScreen.current) setActive((a) => (a + 1) % n); // skip ticks while off-screen
     }, INTERVAL);
@@ -63,7 +63,13 @@ export function Testimonials({ items, section }: Props) {
         <Reveal as="h2" delay={0.06} className={titleClass}>{section.title}</Reveal>
         {section.note && <p className="mt-[10px] max-w-[520px] font-mono text-[11.5px] leading-[1.65] text-on-ink-60">{section.note}</p>}
 
-        <div ref={root} onMouseEnter={stop} onMouseLeave={start} role="group" aria-roledescription="carousel" aria-label="Client testimonials" className="mt-14 max-[640px]:mt-10">
+        <div
+          ref={root}
+          // Pointer events + a mouse check: on touch screens a tap fires a fake mouseenter with no mouseleave,
+          // which used to stop the rotation for good.
+          onPointerEnter={(e) => e.pointerType === "mouse" && stop()}
+          onPointerLeave={(e) => e.pointerType === "mouse" && start()}
+          role="group" aria-roledescription="carousel" aria-label="Client testimonials" className="mt-14 max-[640px]:mt-10">
           <div className="relative h-[330px] [perspective-origin:50%_40%] [perspective:1400px] [transform-style:preserve-3d] max-[640px]:h-[360px]">
             {items.map((t, i) => (
               <article
@@ -96,7 +102,7 @@ export function Testimonials({ items, section }: Props) {
                 aria-label={`Show testimonial ${i + 1}`}
                 aria-selected={i === active}
                 onClick={() => { go(i); }}
-                className={cn("h-[9px] cursor-pointer rounded-full border-0 p-0 transition-[width,background] duration-300", i === active ? "w-7 bg-beige" : "w-[9px] bg-on-ink-30")}
+                className={cn("relative h-[9px] cursor-pointer rounded-full border-0 p-0 transition-[width,background] duration-300 before:absolute before:-inset-x-[5px] before:-inset-y-[14px] before:content-['']", i === active ? "w-7 bg-beige" : "w-[9px] bg-on-ink-30")}
               />
             ))}
           </div>

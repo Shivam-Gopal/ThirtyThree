@@ -60,6 +60,15 @@ export type SampleWork = {
 
 /* ───────────────────────────── site ───────────────────────────── */
 
+/**
+ * WhatsApp click-to-chat link built from the phone number (wa.me is WhatsApp's official format).
+ * The old business short link (api.whatsapp.com/message/FJUZK6OHAX52C1) returned HTTP 400, the same as a made-up
+ * code, so it no longer opened a chat. A wa.me phone link never expires and Android hands it straight to the app.
+ */
+const WHATSAPP_NUMBER = "917827891978"; // country code + number, digits only
+const WHATSAPP_MESSAGE = "Hi ThirtyThree! I'd like to talk about growing my brand.";
+const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+
 export const site = {
   name: "ThirtyThree",
   title: "ThirtyThree — Performance Marketing, Delhi",
@@ -67,7 +76,7 @@ export const site = {
     "ThirtyThree is a performance-led marketing studio blending strategy, creative and media into one growth engine.",
   email: "thirty3.in@gmail.com",
   phone: { display: "+91 78278 91978", tel: "+917827891978" },
-  whatsapp: "https://api.whatsapp.com/message/FJUZK6OHAX52C1",
+  whatsapp: whatsappLink,
   socials: [
     { id: "instagram", label: "Instagram", href: "https://www.instagram.com/thirty3.in/" },
     {
@@ -75,7 +84,7 @@ export const site = {
       label: "LinkedIn",
       href: "https://www.linkedin.com/company/thirtythree-ads/posts/?feedView=all",
     },
-    { id: "whatsapp", label: "WhatsApp", href: "https://api.whatsapp.com/message/FJUZK6OHAX52C1" },
+    { id: "whatsapp", label: "WhatsApp", href: whatsappLink },
   ],
   footerBlurb:
     "A performance led marketing studio building growth engines for ambitious brands strategy, creative and media, under one roof.",
@@ -269,7 +278,9 @@ export const povSection = {
 
 /* ───────────────────────────── ADS WE SHOOT reels ───────────────────────────── */
 
-const AD_COUNT = 14; // ad-01 … ad-14 in public/media/videos/ads — add a file + poster, then bump this
+// Only ad-01 … ad-05 exist in public/media/videos/ads (06-14 have posters but their .mp4 files are missing and 404ed,
+// leaving frozen reels). Add the missing .mp4 files, then set this back to 14.
+const AD_COUNT = 5;
 export const adReels: Reel[] = Array.from({ length: AD_COUNT }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
   return { id: `ad-${n}`, src: `/media/videos/ads/ad-${n}.mp4`, poster: `/media/images/posters/ad-${n}.jpg` };

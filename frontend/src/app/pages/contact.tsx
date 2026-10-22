@@ -22,8 +22,8 @@ export default function ContactPage() {
             </Reveal>
             <Reveal immediate delay={0.1} className="mt-6 max-w-[480px] text-[16.5px] leading-[1.65] text-on-ink-60">{c.lede}</Reveal>
             <Reveal immediate delay={0.15} className="mt-8 space-y-2 font-mono text-[13.5px]">
-              <a className="block text-on-ink no-underline hover:text-beige-dk" href={`mailto:${site.email}`}>{site.email}</a>
-              <a className="block text-on-ink no-underline hover:text-beige-dk" href={`tel:${site.phone.tel}`}>{site.phone.display}</a>
+              <a className="block py-[3px] text-on-ink no-underline hover:text-beige-dk" href={`mailto:${site.email}`}>{site.email}</a>
+              <a className="block py-[3px] text-on-ink no-underline hover:text-beige-dk" href={`tel:${site.phone.tel}`}>{site.phone.display}</a>
             </Reveal>
           </div>
           <Reveal immediate delay={0.12}><ContactForm email={site.email} services={c.services} title={c.formTitle} /></Reveal>

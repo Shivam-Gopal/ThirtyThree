@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState, type RefObject } from "react";
 
-type Options = { threshold?: number; rootMargin?: string; once?: boolean };
+type Options = { threshold?: number; rootMargin?: string; once?: boolean; initial?: boolean };
 
 /** Is the referenced element on (or near) screen? One tiny IntersectionObserver per call. */
-export function useInView<T extends Element>(ref: RefObject<T | null>, { threshold = 0, rootMargin = "0px", once = false }: Options = {}) {
-  const [inView, setInView] = useState(false);
+export function useInView<T extends Element>(ref: RefObject<T | null>, { threshold = 0, rootMargin = "0px", once = false, initial = false }: Options = {}) {
+  const [inView, setInView] = useState(initial);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

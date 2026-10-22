@@ -23,6 +23,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    *, *::before, *::after { animation-duration: 0.001s !important; transition-duration: 0.001s !important; }
+    /* [data-marquee] (logo/ticker strips) is exempt: it keeps scrolling so it doesn't look broken. */
+    *:not([data-marquee]), *::before, *::after { animation-duration: 0.001s !important; transition-duration: 0.001s !important; }
   }
 }

@@ -8,8 +8,13 @@ export function useMediaQuery(query: string) {
     const mq = window.matchMedia(query);
     const update = () => setMatches(mq.matches);
     update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    // Safari < 14 has no addEventListener on MediaQueryList (calling it threw and broke the page there)
+    if (mq.addEventListener) {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
+    }
+    mq.addListener(update);
+    return () => mq.removeListener(update);
   }, [query]);
   return matches;
 }

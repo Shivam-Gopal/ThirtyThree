@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Eyebrow, Wrap, titleClass } from "@/app/components/ui/Layout";
 import { Reveal } from "@/app/components/ui/Reveal";
 import { socialIcons } from "@/app/components/ui/Icons";
+import { WhatsAppLink } from "@/app/components/ui/WhatsAppLink";
 import { getSite } from "@/app/lib/content";
 
-const colLink = "mb-[10px] block text-[14.5px] text-on-ink no-underline transition-[transform,color] duration-200 hover:translate-x-1 hover:text-beige-dk";
+const colLink = "mb-[6px] block py-[4px] text-[14.5px] text-on-ink no-underline transition-[transform,color] duration-200 hover:translate-x-1 hover:text-beige-dk";
 
 export function Footer() {
   const site = getSite();
@@ -32,19 +33,16 @@ export function Footer() {
 
           <div className="min-w-0">
             <h4 className="mb-4 mt-0 font-mono text-[12px] uppercase tracking-[0.1em] text-on-ink-60">Follow</h4>
-            <div className="flex items-center gap-[18px]" aria-label="Social media links">
+            <div className="-ml-[11px] flex items-center gap-[4px]" aria-label="Social media links">
               {site.socials.map((s) => {
                 const Icon = socialIcons[s.id as keyof typeof socialIcons];
-                return (
-                  <a
-                    key={s.id}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.label}
-                    className="inline-flex size-8 items-center justify-center text-on-ink transition-[transform,color] duration-200 hover:-translate-y-[2px] hover:text-beige-dk"
-                  >
-                    <Icon className={s.id === "linkedin" ? "size-[25px]" : "size-[22px]"} />
+                const cls = "inline-flex size-11 items-center justify-center text-on-ink transition-[transform,color] duration-200 hover:-translate-y-[2px] hover:text-beige-dk";
+                const icon = <Icon className={s.id === "linkedin" ? "size-[25px]" : "size-[22px]"} />;
+                return s.id === "whatsapp" ? (
+                  <WhatsAppLink key={s.id} href={s.href} aria-label={s.label} className={cls}>{icon}</WhatsAppLink>
+                ) : (
+                  <a key={s.id} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className={cls}>
+                    {icon}
                   </a>
                 );
               })}
