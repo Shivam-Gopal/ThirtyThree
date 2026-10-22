@@ -152,7 +152,7 @@ export function PageLoader() {
             aria-hidden="true"
             className="absolute inset-0 text-ink will-change-[clip-path] [clip-path:polygon(0%_100%,100%_100%,100%_100%,0%_100%)]"
           >
-            Thirty Three
+            ThirtyThree
           </span>
         </div>
         <div className="flex items-center gap-[10px] font-mono text-[12px] font-semibold uppercase tracking-[0.22em] text-ink-50">
