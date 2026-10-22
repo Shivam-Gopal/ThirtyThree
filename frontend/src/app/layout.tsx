@@ -20,6 +20,7 @@ import { ScrollProgress } from "@/app/components/layout/ScrollProgress";
 import { CustomCursor } from "@/app/components/layout/CustomCursor";
 import { WhatsAppFloat } from "@/app/components/layout/WhatsAppFloat";
 import { getNavLinks, getSite } from "@/app/lib/content";
+import { Analytics } from "@vercel/analytics/next";
 
 const site = getSite();
 
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <WhatsAppFloat />
+        <Analytics />
       </body>
     </html>
   );
