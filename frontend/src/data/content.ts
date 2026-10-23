@@ -337,9 +337,9 @@ export const povSection = {
 
 /* ───────────────────────────── ADS WE SHOOT reels ───────────────────────────── */
 
-// Only ad-01 … ad-05 exist in public/media/videos/ads (06-14 have posters but their .mp4 files are missing and 404ed,
-// leaving frozen reels). Add the missing .mp4 files, then set this back to 14.
-const AD_COUNT = 5;
+// Number of ad reels shown: ad-01 … ad-NN. Each needs public/media/videos/ads/ad-NN.mp4 AND
+// public/media/images/posters/ad-NN.jpg. Add the next file pair, then raise this number (posters exist up to 14).
+const AD_COUNT = 8;
 export const adReels: Reel[] = Array.from({ length: AD_COUNT }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
   return {
