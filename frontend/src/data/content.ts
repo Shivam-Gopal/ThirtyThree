@@ -14,7 +14,13 @@
 
 /* ───────────────────────────── types ───────────────────────────── */
 
-export type Logo = { slug: string; name: string; src: string; width: number; height: number };
+export type Logo = {
+  slug: string;
+  name: string;
+  src: string;
+  width: number;
+  height: number;
+};
 
 export type Reel = {
   id: string;
@@ -24,14 +30,23 @@ export type Reel = {
   title?: string; // caption (use \n for a line break)
 };
 
-export type Testimonial = { id: string; quote: string; name: string; role: string; initials: string };
+export type Testimonial = {
+  id: string;
+  quote: string;
+  name: string;
+  role: string;
+  initials: string;
+};
 
 export type CaseStudyBlock =
   | { type: "heading"; text: string }
   | { type: "text"; text: string }
   | { type: "lead"; text: string } // big standalone line
   | { type: "pull"; text: string } // highlighted pull-quote
-  | { type: "stats"; items: { value: string; label: string; featured?: boolean }[] }
+  | {
+      type: "stats";
+      items: { value: string; label: string; featured?: boolean }[];
+    }
   | { type: "figure"; src: string; alt: string; width: number; height: number }
   | { type: "cards"; items: { title: string; text: string }[] }
   | { type: "list"; items: string[] }
@@ -66,7 +81,7 @@ export type SampleWork = {
  * code, so it no longer opened a chat. A wa.me phone link never expires and Android hands it straight to the app.
  */
 const WHATSAPP_NUMBER = "917827891978"; // country code + number, digits only
-const WHATSAPP_MESSAGE = "Hi ThirtyThree! I'd like to talk about growing my brand.";
+const WHATSAPP_MESSAGE = "Hi ThirtyThree!";
 const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 export const site = {
@@ -78,7 +93,11 @@ export const site = {
   phone: { display: "+91 78278 91978", tel: "+917827891978" },
   whatsapp: whatsappLink,
   socials: [
-    { id: "instagram", label: "Instagram", href: "https://www.instagram.com/thirty3.in/" },
+    {
+      id: "instagram",
+      label: "Instagram",
+      href: "https://www.instagram.com/thirty3.in/",
+    },
     {
       id: "linkedin",
       label: "LinkedIn",
@@ -105,7 +124,12 @@ export const hero = {
   headline: "You build the brand.",
   headlineDim: "We make sure people see it.",
   sub: "Strategy, creative and media, built under one roof and engineered to compound. We don't chase impressions — we chase results.",
-  ticker: ["+300% AVG ROAS SCALED", "BUILDING CATEGORY LEADING BRANDS", "₹1Cr+ MANAGED SPEND", "8M+ LEADS DELIVERED"],
+  ticker: [
+    "+300% AVG ROAS SCALED",
+    "BUILDING CATEGORY LEADING BRANDS",
+    "₹1Cr+ MANAGED SPEND",
+    "8M+ LEADS DELIVERED",
+  ],
 };
 
 export const stats = [
@@ -151,7 +175,12 @@ export const whyUs = [
 
 /* ───────────────────────────── logos on board ───────────────────────────── */
 
-const logo = (slug: string, name: string, width: number, height: number): Logo => ({
+const logo = (
+  slug: string,
+  name: string,
+  width: number,
+  height: number,
+): Logo => ({
   slug,
   name,
   src: `/media/logos/clients/${slug}-v2.png`,
@@ -195,12 +224,24 @@ export const capabilities = [
   {
     title: "Performance Marketing",
     text: "Data driven paid media across Meta, Google and YouTube engineered for ROAS, not impressions.",
-    tags: ["Meta & Google Ads", "Conversion Tracking", "Media Planning", "Retargeting", "Attribution"],
+    tags: [
+      "Meta & Google Ads",
+      "Conversion Tracking",
+      "Media Planning",
+      "Retargeting",
+      "Attribution",
+    ],
   },
   {
     title: "Brand & Creative",
     text: "Scroll stopping creative built to perform static, motion and UGC that earns the click.",
-    tags: ["Ad Creatives", "Motion & Reels", "Brand Identity", "UGC", "Photography"],
+    tags: [
+      "Ad Creatives",
+      "Motion & Reels",
+      "Brand Identity",
+      "UGC",
+      "Photography",
+    ],
   },
   {
     title: "Web Development",
@@ -210,15 +251,33 @@ export const capabilities = [
   {
     title: "Social & SEO",
     text: "Owned channels that compound over time and lower your blended CAC for good.",
-    tags: ["Social Management", "SEO Strategy", "Content Calendars", "Community", "Influencer"],
+    tags: [
+      "Social Management",
+      "SEO Strategy",
+      "Content Calendars",
+      "Community",
+      "Influencer",
+    ],
   },
 ];
 
 export const process = [
-  { title: "Audit", text: "We dig into your funnel, brand and unit economics. You get a thesis, not a pitch deck." },
-  { title: "Architect", text: "Strategy, creative direction and a 90 day media plan with projected ROAS and spend." },
-  { title: "Activate", text: "Full funnel campaigns go live. New creative ships weekly. We test, kill and scale fast." },
-  { title: "Amplify", text: "We compound what works into a growth engine monthly reviews, quarterly bets." },
+  {
+    title: "Audit",
+    text: "We dig into your funnel, brand and unit economics. You get a thesis, not a pitch deck.",
+  },
+  {
+    title: "Architect",
+    text: "Strategy, creative direction and a 90 day media plan with projected ROAS and spend.",
+  },
+  {
+    title: "Activate",
+    text: "Full funnel campaigns go live. New creative ships weekly. We test, kill and scale fast.",
+  },
+  {
+    title: "Amplify",
+    text: "We compound what works into a growth engine monthly reviews, quarterly bets.",
+  },
 ];
 
 export const faqs = [
@@ -283,7 +342,11 @@ export const povSection = {
 const AD_COUNT = 5;
 export const adReels: Reel[] = Array.from({ length: AD_COUNT }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
-  return { id: `ad-${n}`, src: `/media/videos/ads/ad-${n}.mp4`, poster: `/media/images/posters/ad-${n}.jpg` };
+  return {
+    id: `ad-${n}`,
+    src: `/media/videos/ads/ad-${n}.mp4`,
+    poster: `/media/images/posters/ad-${n}.jpg`,
+  };
 });
 
 export const adsSection = {
@@ -323,10 +386,16 @@ export const sampleWork: SampleWork[] = [
           text: "MVRI by the Sea had the kind of products that naturally catch your eye. But getting noticed is one thing. Getting noticed by the right people, building an audience around the brand and turning that attention into actual interest? That's a different game.",
         },
         { type: "text", text: "That's where we came in." },
-        { type: "pull", text: "The idea was simple: make every impression work harder." },
+        {
+          type: "pull",
+          text: "The idea was simple: make every impression work harder.",
+        },
 
         { type: "heading", text: "First, a little context." },
-        { type: "text", text: "Before Thirtythree, MVRI's Instagram was generating:" },
+        {
+          type: "text",
+          text: "Before Thirtythree, MVRI's Instagram was generating:",
+        },
         {
           type: "figure",
           src: "/media/case-studies/mvri-by-the-sea/figure-1-v2.webp",
@@ -371,7 +440,10 @@ export const sampleWork: SampleWork[] = [
           type: "text",
           text: "Some creatives need to stop the scroll. Some need to make people curious. Others need to get them clicking, enquiring or taking the next step.",
         },
-        { type: "text", text: "So we built campaigns around different jobs in the funnel." },
+        {
+          type: "text",
+          text: "So we built campaigns around different jobs in the funnel.",
+        },
         {
           type: "cards",
           items: [
@@ -395,15 +467,29 @@ export const sampleWork: SampleWork[] = [
         },
         {
           type: "list",
-          items: ["Some need to get attention.", "Some need to build the brand.", "Some need to get the click.", "Some need to get the DM."],
+          items: [
+            "Some need to get attention.",
+            "Some need to build the brand.",
+            "Some need to get the click.",
+            "Some need to get the DM.",
+          ],
         },
         { type: "text", text: "So we tested across the funnel." },
         {
           type: "steps",
-          items: ["Reels", "Carousels", "Product statics", "UGC-style content", "Influencer-led content"],
+          items: [
+            "Reels",
+            "Carousels",
+            "Product statics",
+            "UGC-style content",
+            "Influencer-led content",
+          ],
         },
         { type: "text", text: "And the pattern became pretty clear." },
-        { type: "lead", text: "Different creatives. Different roles. One connected strategy." },
+        {
+          type: "lead",
+          text: "Different creatives. Different roles. One connected strategy.",
+        },
 
         { type: "heading", text: "Not just one campaign. A whole funnel." },
         {
@@ -418,9 +504,15 @@ export const sampleWork: SampleWork[] = [
           type: "text",
           text: "We also used non-feed placements and dark-post campaigns where they made sense, allowing us to test and distribute campaign creatives beyond the regular organic feed.",
         },
-        { type: "text", text: "And as the data came in, we kept refining the mix." },
+        {
+          type: "text",
+          text: "And as the data came in, we kept refining the mix.",
+        },
         { type: "lead", text: "Test. Learn. Optimise. Repeat." },
-        { type: "text", text: "Because the point isn't to spend more. It's to make smarter decisions with the spend." },
+        {
+          type: "text",
+          text: "Because the point isn't to spend more. It's to make smarter decisions with the spend.",
+        },
 
         { type: "heading", text: "Now, let's talk numbers." },
         {
@@ -436,7 +528,10 @@ export const sampleWork: SampleWork[] = [
         },
 
         { type: "heading", text: "And the audience kept growing." },
-        { type: "text", text: "A campaign can bring someone to your profile. A good brand experience gives them a reason to stay." },
+        {
+          type: "text",
+          text: "A campaign can bring someone to your profile. A good brand experience gives them a reason to stay.",
+        },
         {
           type: "text",
           text: "MVRI's lifetime Instagram follower base moved from approximately 9.2K to 12.6K+ through the engagement.",
@@ -453,7 +548,10 @@ export const sampleWork: SampleWork[] = [
           height: 768,
         },
 
-        { type: "heading", text: "A million views is nice. What happens next matters more." },
+        {
+          type: "heading",
+          text: "A million views is nice. What happens next matters more.",
+        },
         {
           type: "text",
           text: "The account went on to cross the million-view mark in multiple reported campaign windows, with one scale-up snapshot recording over 1.4M views and 1.38M accounts reached.",
@@ -466,7 +564,10 @@ export const sampleWork: SampleWork[] = [
           type: "text",
           text: "That meant making changes when the data called for them, not just keeping campaigns running because they were already live.",
         },
-        { type: "lead", text: "And that's the difference between simply running ads and actually managing performance." },
+        {
+          type: "lead",
+          text: "And that's the difference between simply running ads and actually managing performance.",
+        },
 
         { type: "heading", text: "So, what did we take away?" },
         {
@@ -482,9 +583,16 @@ export const sampleWork: SampleWork[] = [
           type: "text",
           text: "With MVRI, the work wasn't about finding one magic ad and calling it a day. It was about testing different ways to reach people, understanding what worked and building on those signals.",
         },
-        { type: "pull", text: "More than just getting seen. Getting somewhere." },
+        {
+          type: "pull",
+          text: "More than just getting seen. Getting somewhere.",
+        },
       ],
-      cta: { heading: "Want your brand to be our next growth story?", button: "Let's talk", href: "/contact" },
+      cta: {
+        heading: "Want your brand to be our next growth story?",
+        button: "Let's talk",
+        href: "/contact",
+      },
       signoff: {
         brand: "MVRI by the Sea × ThirtyThree",
         line: "Good products deserve good marketing. Great performance makes it count.",
@@ -501,14 +609,16 @@ export const testimonials: Testimonial[] = [
     initials: "RK",
     name: "R. Kapoor",
     role: "Founder, D2C Fashion",
-    quote: "They think like operators, not vendors. Every dollar is treated like it's their own.",
+    quote:
+      "They think like operators, not vendors. Every dollar is treated like it's their own.",
   },
   {
     id: "an",
     initials: "AN",
     name: "A. Nair",
     role: "Marketing Lead, Beauty Brand",
-    quote: "Sincere, sharp and obsessed with the numbers that actually move the business.",
+    quote:
+      "Sincere, sharp and obsessed with the numbers that actually move the business.",
   },
   {
     id: "sm",
@@ -577,7 +687,8 @@ export const aboutPage = {
       "From shaping brand strategies and working closely with clients to diving into targeting, creatives, campaigns and performance, Aryan is involved where the ideas meet the numbers.",
     ],
     emphasis: {
-      before: "His approach is simple: don’t follow the playbook just because it exists. ",
+      before:
+        "His approach is simple: don’t follow the playbook just because it exists. ",
       strong: "Question it. Test it. Make it better.",
     },
   },
@@ -585,12 +696,18 @@ export const aboutPage = {
     eyebrow: "The backstory",
     title: "Business foundations, hands-on education.",
     creds: [
-      { title: "Graduation, Delhi University", text: "From a renowned college in Delhi University." },
+      {
+        title: "Graduation, Delhi University",
+        text: "From a renowned college in Delhi University.",
+      },
       {
         title: "MBA, Entrepreneurship & Leadership",
         text: "A foundation in business and what it takes to build and scale one.",
       },
-      { title: "Digital Marketing, IIT Delhi", text: "Certification with a focus on Instagram and Facebook Ads." },
+      {
+        title: "Digital Marketing, IIT Delhi",
+        text: "Certification with a focus on Instagram and Facebook Ads.",
+      },
       {
         title: "Marqet Cloud Solutions Pvt. Ltd.",
         text: "Industry recognition for expertise in Performance Marketing Strategies and ROI optimisation.",
