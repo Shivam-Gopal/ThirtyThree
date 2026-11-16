@@ -4,7 +4,6 @@ import { LazyVideo } from "@/app/components/ui/LazyVideo";
 import { SpeakerIcon } from "@/app/components/ui/Icons";
 import { useReelSound } from "@/app/components/ui/ReelGroup";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
-import { useInView } from "@/app/hooks/useInView";
 import { cn } from "@/app/lib/cn";
 import type { Reel } from "@/data/content";
 
@@ -13,10 +12,6 @@ function useReelSoundControl(id: string) {
   const { activeId, setActive, unlocked } = useReelSound();
   const canHover = useMediaQuery("(hover: hover)");
   const hovered = useRef(false);
-  const activeIdRef = useRef(activeId);
-  activeIdRef.current = activeId;
-  const cardRef = useRef<HTMLDivElement>(null);
-  const onScreen = useInView(cardRef, { threshold: 0.7 });
   const soundOn = activeId === id;
 
   // after the visitor's first gesture, retry unmuting a reel they're hovering
@@ -24,20 +19,9 @@ function useReelSoundControl(id: string) {
     if (unlocked && hovered.current && canHover) setActive(id);
   }, [unlocked, canHover, id, setActive]);
 
-  // On touch devices, make the mostly visible card the single sound-active
-  // reel. Wait for the first user gesture because mobile browsers block
-  // audible autoplay before that interaction.
-  useEffect(() => {
-    if (canHover || !unlocked) return;
-    if (onScreen && activeIdRef.current !== id) setActive(id);
-    else if (!onScreen && activeIdRef.current === id) setActive(null);
-  }, [canHover, id, onScreen, setActive, unlocked]);
-
   return {
-    cardRef,
     soundOn,
     blocked: () => setActive(null),
-    leaveView: () => soundOn && setActive(null),
     onMouseEnter: () => { if (!canHover) return; hovered.current = true; setActive(id); },
     onMouseLeave: () => { hovered.current = false; if (canHover && soundOn) setActive(null); },
     toggle: () => setActive(soundOn ? null : id),
@@ -51,13 +35,12 @@ export function PovReelCard({ reel }: { reel: Reel }) {
   return (
     <div className="min-w-0 max-[700px]:flex-[0_0_68%] max-[700px]:snap-start">
       <div
-        ref={c.cardRef}
         onMouseEnter={c.onMouseEnter}
         onMouseLeave={c.onMouseLeave}
         onClick={c.toggle}
         className="relative aspect-[9/16] cursor-pointer overflow-hidden rounded-2xl border border-on-ink-30 bg-ink-2 transition-[transform,box-shadow] duration-[350ms] ease-[cubic-bezier(.2,.8,.2,1)] after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgba(0,0,0,.35)_0%,rgba(0,0,0,0)_28%,rgba(0,0,0,0)_65%,rgba(0,0,0,.55)_100%)] after:content-[''] hover:-translate-y-[6px] hover:shadow-[0_24px_50px_rgba(0,0,0,.45)]"
       >
-        <LazyVideo src={reel.src} poster={reel.poster} soundOn={c.soundOn} onSoundBlocked={c.blocked} onLeaveView={c.leaveView} />
+        <LazyVideo src={reel.src} poster={reel.poster} soundOn={c.soundOn} onSoundBlocked={c.blocked} />
         <button
           type="button"
           aria-label="Toggle sound"
@@ -83,7 +66,6 @@ export function AdReelCard({ reel }: { reel: Reel }) {
   return (
     <div className="group relative z-[1] w-[210px] flex-none snap-start hover:z-[5] max-[980px]:w-[200px] max-sm:w-[62vw]">
       <div
-        ref={c.cardRef}
         onMouseEnter={c.onMouseEnter}
         onMouseLeave={c.onMouseLeave}
         onClick={c.toggle}
@@ -93,7 +75,7 @@ export function AdReelCard({ reel }: { reel: Reel }) {
           "hover:scale-[1.08] hover:shadow-[0_24px_50px_rgba(0,0,0,.45)]",
         )}
       >
-        <LazyVideo src={reel.src} poster={reel.poster} soundOn={c.soundOn} onSoundBlocked={c.blocked} onLeaveView={c.leaveView} />
+        <LazyVideo src={reel.src} poster={reel.poster} soundOn={c.soundOn} onSoundBlocked={c.blocked} />
         <span aria-hidden="true" className={cn("absolute bottom-[10px] right-[10px] z-[2] flex size-[26px] items-center justify-center rounded-full bg-[rgba(21,19,13,.55)] backdrop-blur-[4px] transition-opacity duration-[250ms] group-hover:opacity-0", c.soundOn ? "opacity-0" : "opacity-[0.85]")}>
           <SpeakerIcon on={c.soundOn} className="size-[13px]" />
         </span>

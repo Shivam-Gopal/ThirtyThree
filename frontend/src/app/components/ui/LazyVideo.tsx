@@ -9,44 +9,33 @@ type Props = {
   /** play with sound (parent decides). If the browser blocks it, onSoundBlocked fires. */
   soundOn?: boolean;
   onSoundBlocked?: () => void;
-  onLeaveView?: () => void;
   className?: string;
 };
 
 /**
- * Looping video that requests media data and starts muted inline playback while visible.
+ * Muted inline loop that starts independently of the sound toggle.
  */
-export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeaveView, className }: Props) {
+export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, className }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
-  // Start playback as soon as any part of the card is visible; mobile screens
-  // often show only a small portion of tall portrait videos while swiping.
   const visible = useInView(ref, { threshold: 0.01 });
 
-  // play / pause with visibility
+  // Autoplay is always enabled below. Retry playback when a card becomes
+  // visible in case the browser deferred an offscreen video.
   useEffect(() => {
     const v = ref.current;
-    if (!v) return;
-    if (visible) {
-      // Playback can be requested before mobile has buffered enough data.
-      // Retry as soon as the browser reports that the video is ready.
-      const play = () => {
-        if (!v.paused) return;
-        void v.play().catch(() => {});
-      };
-      v.addEventListener("loadeddata", play);
-      v.addEventListener("canplay", play);
-      play();
-      return () => {
-        v.removeEventListener("loadeddata", play);
-        v.removeEventListener("canplay", play);
-      };
-    }
-    else {
-      v.pause();
-      onLeaveView?.();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
+    if (!v || !visible) return;
+    const play = () => {
+      if (!v.paused) return;
+      void v.play().catch(() => {});
+    };
+    v.addEventListener("loadeddata", play);
+    v.addEventListener("canplay", play);
+    play();
+    return () => {
+      v.removeEventListener("loadeddata", play);
+      v.removeEventListener("canplay", play);
+    };
+  }, [src, visible]);
 
   // sound on / off
   useEffect(() => {
@@ -70,10 +59,10 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
       src={src}
       poster={poster}
       muted
-      autoPlay={visible}
+      autoPlay
       loop
       playsInline
-      preload={visible ? "auto" : "none"}
+      preload="auto"
     />
   );
 }
