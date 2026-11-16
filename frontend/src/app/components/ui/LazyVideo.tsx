@@ -14,25 +14,21 @@ type Props = {
 };
 
 /**
- * Performance-first looping video:
- *  • nothing is downloaded until the card is within ~300px of the viewport (poster shows meanwhile)
- *  • plays while visible, pauses the moment it scrolls away
- *  • starts muted inline playback only while visible
+ * Looping video that requests media data and starts muted inline playback while visible.
  */
 export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeaveView, className }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
-  const near = useInView(ref, { rootMargin: "300px 0px", once: true });
-  // Mobile viewports can expose less than a quarter of a tall portrait card.
-  // A low threshold still avoids playing cards that are fully off screen.
+  // Start playback as soon as any part of the card is visible; mobile screens
+  // often show only a small portion of tall portrait videos while swiping.
   const visible = useInView(ref, { threshold: 0.01 });
 
   // play / pause with visibility
   useEffect(() => {
     const v = ref.current;
-    if (!v || !near) return;
+    if (!v) return;
     if (visible) {
-      // Source assignment and autoplay can race on mobile, especially when
-      // the browser is still fetching the video. Retry when data is ready.
+      // Playback can be requested before mobile has buffered enough data.
+      // Retry as soon as the browser reports that the video is ready.
       const play = () => {
         if (!v.paused) return;
         void v.play().catch(() => {});
@@ -50,7 +46,7 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
       onLeaveView?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, near]);
+  }, [visible]);
 
   // sound on / off
   useEffect(() => {
@@ -71,13 +67,13 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
     <video
       ref={ref}
       className={cn("absolute inset-0 block h-full w-full object-cover", className)}
-      src={near ? src : undefined}
+      src={src}
       poster={poster}
       muted
-      autoPlay={near && visible}
+      autoPlay={visible}
       loop
       playsInline
-      preload={near ? "metadata" : "none"}
+      preload={visible ? "auto" : "none"}
     />
   );
 }
