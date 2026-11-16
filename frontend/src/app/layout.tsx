@@ -31,7 +31,7 @@ export const viewport: Viewport = { themeColor: "#121009", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-sans text-ink antialiased">
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}body.tt-loading{overflow:auto}`}</style>

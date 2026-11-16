@@ -74,7 +74,6 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
       src={near ? src : undefined}
       poster={poster}
       muted
-      defaultMuted
       autoPlay={near && visible}
       loop
       playsInline
