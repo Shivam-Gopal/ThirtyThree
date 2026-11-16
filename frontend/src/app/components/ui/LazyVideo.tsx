@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useInView } from "@/app/hooks/useInView";
 import { cn } from "@/app/lib/cn";
 
@@ -17,7 +17,7 @@ type Props = {
  * Performance-first looping video:
  *  • nothing is downloaded until the card is within ~300px of the viewport (poster shows meanwhile)
  *  • plays while visible, pauses the moment it scrolls away
- *  • stays on the poster for visitors with Data-Saver / reduced-motion enabled
+ *  • starts muted inline playback only while visible
  */
 export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeaveView, className }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -25,18 +25,11 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
   // Mobile viewports can expose less than a quarter of a tall portrait card.
   // A low threshold still avoids playing cards that are fully off screen.
   const visible = useInView(ref, { threshold: 0.01 });
-  const [canAutoplay, setCanAutoplay] = useState(true);
-
-  useEffect(() => {
-    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (conn?.saveData || reduced) setCanAutoplay(false);
-  }, []);
 
   // play / pause with visibility
   useEffect(() => {
     const v = ref.current;
-    if (!v || !near || !canAutoplay) return;
+    if (!v || !near) return;
     if (visible) {
       // Source assignment and autoplay can race on mobile, especially when
       // the browser is still fetching the video. Retry when data is ready.
@@ -57,7 +50,7 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
       onLeaveView?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, near, canAutoplay]);
+  }, [visible, near]);
 
   // sound on / off
   useEffect(() => {
@@ -81,6 +74,8 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
       src={near ? src : undefined}
       poster={poster}
       muted
+      defaultMuted
+      autoPlay={near && visible}
       loop
       playsInline
       preload={near ? "metadata" : "none"}
