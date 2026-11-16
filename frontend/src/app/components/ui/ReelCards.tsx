@@ -4,6 +4,7 @@ import { LazyVideo } from "@/app/components/ui/LazyVideo";
 import { SpeakerIcon } from "@/app/components/ui/Icons";
 import { useReelSound } from "@/app/components/ui/ReelGroup";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
+import { useInView } from "@/app/hooks/useInView";
 import { cn } from "@/app/lib/cn";
 import type { Reel } from "@/data/content";
 
@@ -12,6 +13,10 @@ function useReelSoundControl(id: string) {
   const { activeId, setActive, unlocked } = useReelSound();
   const canHover = useMediaQuery("(hover: hover)");
   const hovered = useRef(false);
+  const activeIdRef = useRef(activeId);
+  activeIdRef.current = activeId;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const onScreen = useInView(cardRef, { threshold: 0.7 });
   const soundOn = activeId === id;
 
   // after the visitor's first gesture, retry unmuting a reel they're hovering
@@ -19,7 +24,17 @@ function useReelSoundControl(id: string) {
     if (unlocked && hovered.current && canHover) setActive(id);
   }, [unlocked, canHover, id, setActive]);
 
+  // On touch devices, make the mostly visible card the single sound-active
+  // reel. Wait for the first user gesture because mobile browsers block
+  // audible autoplay before that interaction.
+  useEffect(() => {
+    if (canHover || !unlocked) return;
+    if (onScreen && activeIdRef.current !== id) setActive(id);
+    else if (!onScreen && activeIdRef.current === id) setActive(null);
+  }, [canHover, id, onScreen, setActive, unlocked]);
+
   return {
+    cardRef,
     soundOn,
     blocked: () => setActive(null),
     leaveView: () => soundOn && setActive(null),
@@ -36,6 +51,7 @@ export function PovReelCard({ reel }: { reel: Reel }) {
   return (
     <div className="min-w-0 max-[700px]:flex-[0_0_68%] max-[700px]:snap-start">
       <div
+        ref={c.cardRef}
         onMouseEnter={c.onMouseEnter}
         onMouseLeave={c.onMouseLeave}
         onClick={c.toggle}
@@ -67,6 +83,7 @@ export function AdReelCard({ reel }: { reel: Reel }) {
   return (
     <div className="group relative z-[1] w-[210px] flex-none snap-start hover:z-[5] max-[980px]:w-[200px] max-sm:w-[62vw]">
       <div
+        ref={c.cardRef}
         onMouseEnter={c.onMouseEnter}
         onMouseLeave={c.onMouseLeave}
         onClick={c.toggle}
