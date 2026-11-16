@@ -16,13 +16,15 @@ type Props = {
 /**
  * Performance-first looping video:
  *  • nothing is downloaded until the card is within ~300px of the viewport (poster shows meanwhile)
- *  • plays only while ≥25% visible, pauses the moment it scrolls away
+ *  • plays while visible, pauses the moment it scrolls away
  *  • stays on the poster for visitors with Data-Saver / reduced-motion enabled
  */
 export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeaveView, className }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   const near = useInView(ref, { rootMargin: "300px 0px", once: true });
-  const visible = useInView(ref, { threshold: 0.25 });
+  // Mobile viewports can expose less than a quarter of a tall portrait card.
+  // A low threshold still avoids playing cards that are fully off screen.
+  const visible = useInView(ref, { threshold: 0.01 });
   const [canAutoplay, setCanAutoplay] = useState(true);
 
   useEffect(() => {
@@ -35,7 +37,21 @@ export function LazyVideo({ src, poster, soundOn = false, onSoundBlocked, onLeav
   useEffect(() => {
     const v = ref.current;
     if (!v || !near || !canAutoplay) return;
-    if (visible) v.play().catch(() => {});
+    if (visible) {
+      // Source assignment and autoplay can race on mobile, especially when
+      // the browser is still fetching the video. Retry when data is ready.
+      const play = () => {
+        if (!v.paused) return;
+        void v.play().catch(() => {});
+      };
+      v.addEventListener("loadeddata", play);
+      v.addEventListener("canplay", play);
+      play();
+      return () => {
+        v.removeEventListener("loadeddata", play);
+        v.removeEventListener("canplay", play);
+      };
+    }
     else {
       v.pause();
       onLeaveView?.();
