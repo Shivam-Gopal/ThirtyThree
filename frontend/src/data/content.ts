@@ -112,7 +112,7 @@ export const site = {
 export const navLinks = [
   { label: "Services", href: "/#capabilities" },
   { label: "Work", href: "/#work" },
-  { label: "Reels", href: "/#reels" },
+  { label: "Ads", href: "/#reels" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -339,7 +339,7 @@ export const povSection = {
 
 // Number of ad reels shown: ad-01 … ad-NN. Each needs public/media/videos/ads/ad-NN.mp4 AND
 // public/media/images/posters/ad-NN.jpg. Add the next file pair, then raise this number (posters exist up to 14).
-const AD_COUNT = 8;
+const AD_COUNT = 6;
 export const adReels: Reel[] = Array.from({ length: AD_COUNT }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
   return {
